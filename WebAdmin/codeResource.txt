@@ -1,0 +1,144 @@
+﻿------------------- Pedido.aspx - Invoice -------------------
+
+<div id="invoiceDivPanel" class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-user"></i>  Invoice
+                    <%--<span id="invoiceLabel" style="margin-left:10px; margin-bottom:30px;" class="label label-default">Cliente nuevo</span>--%>
+                    <asp:LinkButton OnClick="genInvoice_Click" CausesValidation="false" UseSubmitBehavior="false" ID="genInvoice" ClientIDMode="Static" CSSClass="btn btn-default" runat="server"></asp:LinkButton>
+                </h3>
+                <span class="pull-right clickable"><i id="invoiceSpanCollapse" class="fa fa-chevron-up"></i></span>
+            </div>
+            <div class="panel-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+    		                <div class="invoice-title">
+    			                <h2><asp:Label text="" id="invBrand" runat="server"/></h2><h3 class="pull-right">Orden</h3>
+    		                </div>
+    		                <hr>
+    		                <div class="row">
+    			                <div class="col-xs-6">
+    				                <address>
+    				                <strong>Dirigido a:</strong><br>
+    					                <asp:Label text="" id="invName" runat="server"/><br>
+    					                <asp:Label text="" id="invCity" runat="server"/><br>
+    					                <asp:Label text="" id="invColony" runat="server"/><br>
+    					                <asp:Label text="" id="invStreetNumber" runat="server"/>
+    				                </address>
+    			                </div>
+    			                <div class="col-xs-6 text-right">
+    				                <address>
+        			                <strong>Distribuidor</strong><br>
+    					                --<br>
+    					                --<br>
+    					                --<br>
+    					                --
+    				                </address>
+    			                </div>
+    		                </div>
+    		                <div class="row">
+    			                <div class="col-xs-6">
+    				                <address>
+    					                <strong>Forma de Pago:</strong><br>
+    					                <asp:Label text="" id="invPayMethod" runat="server"/><br>
+    					                $<asp:Label text="" id="invQtyPay" runat="server"/>
+    				                </address>
+    			                </div>
+    			                <div class="col-xs-6 text-right">
+    				                <address>
+    					                <strong>Fecha de la orden:</strong><br>
+    					                <asp:Label text="" id="invOrderDate" runat="server"/><br><br>
+    				                </address>
+    			                </div>
+    		                </div>
+    	                </div>
+                    </div>
+
+                    <div class="row">
+    	                <div class="col-md-12">
+    		                <div class="panel panel-default">
+    			                <div class="panel-heading">
+    				                <h3 class="panel-title"><strong>Pedido</strong></h3>
+    			                </div>
+    			                <div class="panel-body">
+    				                <div class="table-responsive">
+    					                <table class="table table-condensed">
+    						                <thead>
+                                                <tr>
+        							                <td><strong>Item</strong></td>
+        							                <td class="text-center"><strong>Precio</strong></td>
+        							                <td class="text-center"><strong>Cantidad</strong></td>
+        							                <td class="text-right"><strong>Totales</strong></td>
+                                                </tr>
+    						                </thead>
+    						                <tbody>
+    							                <!-- foreach ($order->lineItems as $line) or some such thing here -->
+    							                <tr>
+    								                <td><asp:Label text="" id="invProductAndType" runat="server"/></td>
+    								                <td class="text-center"&<asp:Label text="" id="invItemPrice" runat="server"/></td>
+    								                <td class="text-center">1</td>
+    								                <td class="text-right">$<asp:Label text="" id="invItemPriceTotal" runat="server"/></td>
+    							                </tr>
+                                                <%--<tr>
+        							                <td>BS-400</td>
+    								                <td class="text-center">$20.00</td>
+    								                <td class="text-center">3</td>
+    								                <td class="text-right">$60.00</td>
+    							                </tr>
+                                                <tr>
+            						                <td>BS-1000</td>
+    								                <td class="text-center">$600.00</td>
+    								                <td class="text-center">1</td>
+    								                <td class="text-right">$600.00</td>
+    							                </tr>--%>
+    							                <tr>
+    								                <td class="thick-line"></td>
+    								                <td class="thick-line"></td>
+    								                <td class="thick-line text-center"><strong>Subtotal</strong></td>
+    								                <td class="thick-line text-right">$<asp:Label text="" id="invSubTotalPrice" runat="server"/></td>
+    							                </tr>
+    							                <%--<tr>
+    								                <td class="no-line"></td>
+    								                <td class="no-line"></td>
+    								                <td class="no-line text-center"><strong>Shipping</strong></td>
+    								                <td class="no-line text-right">$15</td>
+    							                </tr>--%>
+    							                <tr>
+    								                <td class="no-line"></td>
+    								                <td class="no-line"></td>
+    								                <td class="no-line text-center"><strong>Total</strong></td>
+    								                <td class="no-line text-right">$<asp:Label text="" id="invTotalPrice" runat="server"/></td>
+    							                </tr>
+    						                </tbody>
+    					                </table>
+    				                </div>
+    			                </div>
+    		                </div>
+    	                </div>
+                    </div>
+                </div> <!-- /.container Invoice -->
+            </div>
+        </div>
+        
+------------------- Pedido.aspx.cs - Invoide -------------------
+
+ protected void genInvoice_Click(object sender, EventArgs e)
+        {
+            invBrand.Text = brandDropD.SelectedItem.Text;
+
+            invName.Text = firstName.Text + " " + lastName.Text;
+            invCity.Text = city.Text;
+            invColony.Text = colony.Text;
+            invStreetNumber.Text = street.Text + " " + dirNumber.Text;
+
+            invPayMethod.Text = payMethod.SelectedItem.Text;
+            invQtyPay.Text = qtyPay.Text;
+
+            invOrderDate.Text = orderDate.Text;
+
+            invProductAndType.Text = productDropD.SelectedItem.Text + " " + typeDropD.SelectedItem.Text;
+            invItemPrice.Text = productDropD.SelectedValue;
+            invItemPriceTotal.Text = productDropD.SelectedValue;
+            invSubTotalPrice.Text = productDropD.SelectedValue;
+            invTotalPrice.Text = productDropD.SelectedValue;
+        }
