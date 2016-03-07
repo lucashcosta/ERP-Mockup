@@ -1,5 +1,5 @@
 # ASP-Project
-ERP project I made 2-3 years ago. Easy editable for whatever purposes.
+ERP Mockup
 
 This projects involves the following concepts:
 + C#
