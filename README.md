@@ -10,6 +10,4 @@ This projects involves the following concepts:
 + HTML
 
 # Preview
-![alt text](http://i.imgur.com/ohRcVls.jpg "Dashboard")
-![alt text](http://i.imgur.com/cU3450A.jpg "Module")
-![alt text](http://i.imgur.com/hU9vYlI.jpg "Module 2")
+![alt text](http://i.imgur.com/lMyBuc8.png?1 "Dashboard")
