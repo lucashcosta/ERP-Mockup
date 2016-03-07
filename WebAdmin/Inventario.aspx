@@ -95,7 +95,7 @@
             }
 
             $(document).ready(function () {
-                CallGetRequestedItems();
+                
             });
 
             //------------ Date range picker below---------------
@@ -124,6 +124,7 @@
             var today = moment();
             var tomorrow = moment().add('days', 1);
 
+            var picker;
             $('#dashboard-report-range span').html(today.format('MMMM D, YYYY') + ' - ' + tomorrow.format('MMMM D, YYYY'))
             $('#dashboard-report-range').daterangepicker({
                 opens: 'left',
@@ -162,10 +163,11 @@
                 }
             },
             function (start, end) {
+                picker = this;
                 //console.log("Callback has been called!");
                 $('#dashboard-report-range span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                startDate = $("input[name='daterangepicker_start']").val();
-                endDate = $("input[name='daterangepicker_end']").val();
+                startDate = this.startDate.format('DD/MM/YYYY');
+                endDate = this.endDate.format('DD/MM/YYYY')
                 $('#startDate').val(startDate);
                 $('#endDate').val(endDate);
                 CallGetRequestedItems();

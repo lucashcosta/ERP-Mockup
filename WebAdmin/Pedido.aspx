@@ -155,6 +155,8 @@
                         <asp:BoundField DataField="id_pedido" HeaderText="ID" />
                         <asp:BoundField DataField="fechaEntrega_orden" HeaderText="Fecha entrega" />
                         <asp:BoundField DataField="status_orden" HeaderText="Status"/>
+
+                        <asp:BoundField DataField="notas_orden" HeaderText="Notas" ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden"/>
                         <asp:BoundField DataField="totalProductos_orden" HeaderText="Total" ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden"/>
 
                         <asp:BoundField DataField="producto_orden" HeaderText="Producto" ItemStyle-CssClass="hidden" HeaderStyle-CssClass="hidden"/>
@@ -257,10 +259,7 @@
                 <span class="pull-right"><i class="fa fa-chevron-up"></i></span>
                 </div>
                 <div id="productsSelectDiv" class="panel-body">
-                    <% if (User.Identity.Name.Equals("admin"))
-                           brandDropDDiv.Visible = true;%>
-
-                    <div runat="server" visible="false" class="form-group" id="brandDropDDiv" data-toggle="tooltip" data-placement="left" title="Tooltip on left">
+                    <div runat="server" visible="true" class="form-group" id="brandDropDDiv" data-toggle="tooltip" data-placement="left" title="Tooltip on left">
                         <asp:DropDownList ClientIDMode="Static" AppendDataBoundItems=True ID="brandDropD" runat="server" CssClass="form-control" OnSelectedIndexChanged="brandDropD_SelectedIndexChanged" AutoPostBack="true" >
                             <asp:ListItem Value="0"> Selecciona una marca</asp:ListItem>
                         </asp:DropDownList>
@@ -604,143 +603,7 @@
                   <div class="modal-body">
                       <%--Details here--%>
                       <asp:PlaceHolder runat="server" ID="buyDetailsHolder">
-                          <div class="row" id="order1">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label runat="server" ClientIDMode="Static" ID="lbl_qtyproduct"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label runat="server" ClientIDMode="Static" ID="lbl_product"></asp:Label>
-                              </div>
-                              <hr />
-                          </div>
-                          <p></p>
-                          <div class="row hidden" id="order2">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_qtyproduct2"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_product2"></asp:Label>
-                              </div>
-                              <hr />
-                          </div>
-                          <p></p>
-                          <div class="row hidden" id="order3">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_qtyproduct3"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_product3"></asp:Label>
-                              </div>
-                          </div>
-                          <p></p>
-                          <div class="row hidden" id="order4">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_qtyproduct4"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_product4"></asp:Label>
-                              </div>
-                          </div>
-                          <p></p>
-                          <div class="row hidden" id="order5">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_qtyproduct5"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_product5"></asp:Label>
-                              </div>
-                          </div>
-                          <p></p>
-                          <div class="row hidden" id="order6">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_qtyproduct6"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_product6"></asp:Label>
-                              </div>
-                          </div>
-                          <p></p>
-                          <div class="row hidden" id="order7">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_qtyproduct7"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_product7"></asp:Label>
-                              </div>
-                          </div>
-                          <p></p>
-                          <div class="row hidden" id="order8">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_qtyproduct8"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_product8"></asp:Label>
-                              </div>
-                          </div>
-                          <p></p>
-                          <div class="row hidden" id="order9">
-                              <div class="col-md-5 name">
-                                  Cantidad:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_qtyproduct9"></asp:Label>
-                              </div>
-                              <div class="col-md-5 name">
-                                  Producto:
-                              </div>
-                              <div class="col-md-7 value">
-                                  <asp:Label ClientIDMode="Static" runat="server" ID="lbl_product9"></asp:Label>
-                              </div>
-                          </div>
-
+                          <div class="text-primary" id="buyDetailsDiv"></div>
                       </asp:PlaceHolder>
                   </div>
                   <div class="modal-footer">
@@ -753,7 +616,7 @@
         </div><!-- /.col-lg-6 -->
 
         <div class="col-lg-12">            
-            <asp:Button CssClass="pull-right btn btn-success" runat="server" id="submitBtn" Text="Sumbit" UseSubmitBehavior="true" OnClientClick="return ValidateForm();" OnClick="submitBtn_Click"/>
+            <asp:Button CssClass="pull-right btn btn-success" runat="server" id="submitBtn" Text="Submit" UseSubmitBehavior="true" OnClientClick="return ValidateForm();" OnClick="submitBtn_Click"/>
         </div>
 
         <script src="js/modernizr.custom.js" type="text/javascript"></script>
@@ -1063,42 +926,72 @@
                     n++
                 }
 
-                //data[3] = Total
-                //data[4] = Product
-                //data[5] = Type
-                //data[6] = Qty
+                //data[4] = Total
+                //data[5] = Product
+                //data[6] = Type
+                //data[7] = Qty
 
-                $('#lbl_product').text(data[4] + " [" + data[5] + "]");
-                $('#lbl_qtyproduct').text(data[6]);
+                writeLastBuys(data)
 
-                
-                var n_product = 7;
-                var n_type = 8;
-                var n_qty = 9;
+                data;
+                $('#modalLastBuyDetailsGrid').modal('show');
+            });
+
+            /* ------ End Managing last 3 buys ------ */
+
+            /* ------ Last 3 buys table ------ */
+            function writeLastBuys(data) {
+                var html = "<table class='table'>";
+                html += "<thead>";
+                html += "<tr>";
+                html += "<th>Producto</th>";
+                html += "<th>Tipo</th>";
+                html += "<th>Cantidad</th>";
+                html += "</tr>";
+                html += "</thead>";
+
+                html += "<tbody>";
+
+                // Write first product/qty of order
+                html += "<tr>";
+                html += "<td>" + data[5] + "</td>";
+                html += "<td>" + data[6] + "</td>";
+                html += "<td>" + data[7] + "</td>";
+                html += "</tr>";
+
+                var n_product = 8;
+                var n_type = 9;
+                var n_qty = 10;
                 var n = 2;
                 for (i = 0; i < 9; i++) {
                     if (data[n_product].trim().length == 0) {
                         break;
                     }
 
-                    $('#lbl_product' + n).text(data[n_product] + " [" + data[n_type] + "]");
-                    $('#lbl_qtyproduct' + n).text(data[n_qty]);
+                    html += "<tr>";
+                    html += "<td>" + data[n_product] + "</td>";
+                    html += "<td>" + data[n_type] + "</td>";
+                    html += "<td>" + data[n_qty] + "</td>";
+                    html += "</tr>";
 
-                    $('#order' + n).removeClass('hidden');
-                    n++;
                     n_product = n_product + 3;
                     n_type = n_type + 3;
                     n_qty = n_qty + 3;
                 }
 
-                data;
-                $('#modalLastBuyDetailsGrid').modal('show');
-            });
+                html += "</tbody>";
+                html += "</table>"
 
-            /* ------ End  Managing last 3 buys ------ */
+                html += "<strong><p class='text-right text-success'> Total: $" + data[4] + "</p></strong>"
+                html += "<strong>Notas:</strong>"
+                html += "<p class='text-muted'>" + data[3] + "</p>";
+
+                $("#buyDetailsDiv").html(html)
+                $("#boxModal").modal("toggle");
+            }
+
 
             /* -------- Start Button Checkbox for shipping price --------*/
-
             $(function () {
                 $('.button-checkbox').each(function () {
 

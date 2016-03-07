@@ -8,7 +8,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Services;
 using System.Configuration;
-using System.Web.Http;
 using WebAdmin.Classes;
 using System.Globalization;
 

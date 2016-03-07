@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 
 namespace WebAdmin
 {
-    public partial class Tipos : System.Web.UI.Page
+    public partial class Productos : System.Web.UI.Page
     {
         private static string[] m_UserBinds;
         private string strQuery;
@@ -33,7 +33,7 @@ namespace WebAdmin
                 BindTable();
                 
 
-                if (User.Identity.Name.Equals("admin"))
+                if (true)
                 {
                     //Bind all brands
                     BindBrandDrop();
@@ -75,7 +75,7 @@ namespace WebAdmin
 
         private void BindTable()
         {
-            if (User.Identity.Name.Equals("admin"))
+            if (true)
             {
                 //Bind all brands
                 strQuery = "SELECT [id_producto], [id_marca], [nombre_marca] ,[nombre_producto], [estaPublicado_producto], [descripcion_producto], [precioUnitario_producto] FROM [dbo].[View_MarcasProducto]";
@@ -167,7 +167,7 @@ namespace WebAdmin
                 command.Parameters.AddWithValue("@name", name);
                 command.Parameters.AddWithValue("@price", price);
 
-                if (User.Identity.Name.Equals("admin"))
+                if (true)
                     id = Convert.ToInt32(brandInputField.SelectedValue);
 
                 command.Parameters.AddWithValue("@idBrand", id);

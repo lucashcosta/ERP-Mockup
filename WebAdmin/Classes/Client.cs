@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -7,40 +8,68 @@ namespace WebAdmin.Classes
 {
     public class Client
     {
-        private string firstName;
-        public string FirstName
+        public string Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string FullName { get; set; }
+        public string Phone { get; set; }
+        public string Mobile { get; set; }
+        public string Plano { get; set; }
+        public string Colonia { get; set; }
+        public string Ruta { get; set; }
+        public string idRuta { get; set; }
+        public string Postal { get; set; }
+
+        public Client(DataRow row)
         {
-            get { return firstName; }
-            set { firstName = value; }
+            try { Id = row["id_cliente"].ToString(); }
+            catch (Exception e) { Id = String.Empty; }
+
+            try { FirstName = row["nombre_cliente"].ToString(); }
+            catch (Exception e) { FirstName = String.Empty; }
+
+            try { LastName = row["apellido_cliente"].ToString(); }
+            catch (Exception e) { LastName = String.Empty; }
+
+            FullName = FirstName + " " + LastName;
+            
+            try { Phone = row["telefono_cliente"].ToString(); }
+            catch (Exception e) { Phone = String.Empty; }
+
+            try { Mobile = row["movil_cliente"].ToString(); }
+            catch (Exception e) { Mobile = String.Empty; }
+
+            try { Colonia = row["colonia_cliente"].ToString(); }
+            catch (Exception e) { Colonia = String.Empty; }
+
+            try { Ruta = row["nombre_ruta"].ToString(); }
+            catch (Exception e) { Ruta = String.Empty; }
+
+            try { idRuta = row["id_ruta"].ToString(); }
+            catch (Exception e) { idRuta = String.Empty; }
+
+            try { Plano = row["plano_cliente"].ToString(); }
+            catch (Exception e) { Plano = String.Empty; }
+
+            try { Postal = row["postal_cliente"].ToString(); }
+            catch (Exception e) { Postal = String.Empty; }
         }
 
-        private string lastName;
-        public string LastName
+        public Client(IDictionary<string, object> client)
         {
-            get { return lastName; }
-            set { lastName = value; }
+            Id = client["Id"].ToString();
+            FirstName = client["FirstName"].ToString();
+            FirstName = client["LastName"].ToString();
+            FullName = client["FullName"].ToString();
+            Phone = client["Phone"].ToString();
+            Mobile = client["Mobile"].ToString();
+            Colonia = client["Colonia"].ToString();
+            Ruta = client["Ruta"].ToString();
+            idRuta = client["idRuta"].ToString();
+            Plano = client["Plano"].ToString();
+            Postal = client["Postal"].ToString();
         }
 
-        private string phone;
-        public string Phone
-        {
-            get { return phone; }
-            set { phone = value; }
-        }
-
-        private string mobile;
-        public string Mobile
-        {
-            get { return mobile; }
-            set { mobile = value; }
-        }
-
-        private string plano;
-        public string Plano
-        {
-            get { return plano; }
-            set { plano = value; }
-        }
-
+        public Client() { }
     }
 }

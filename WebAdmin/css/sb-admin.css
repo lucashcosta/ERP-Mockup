@@ -23,8 +23,18 @@ body {
   padding: 5px 15px;
 }
 
-.clickable{
+.clickable {
     cursor: pointer;   
+}
+.editable {
+    cursor: pointer;
+    margin-top:-16px !important;
+    margin-right:10px;
+}
+.cancelable {
+    cursor: pointer;
+    margin-top:-16px !important;
+    margin-right:33px;
 }
 .panel-heading span {
 	margin-top: -20px;
@@ -111,7 +121,7 @@ table.tablesorter thead tr th:hover {
 	left: 225px;
 	width: 200px;
 	position: fixed;
-	top: 60px;
+	top: 45px;
 	height: 100%;
 	border-radius: 0;
 	border: none;
@@ -247,5 +257,22 @@ table.tablesorter thead tr th:hover {
   .table-panelfit{
       margin-bottom: 0px;
       margin-top: 0px;
+  }
+
+  .disabled {
+      pointer-events: none;
+      opacity: 0.4;
+  }
+
+  .table-responsive>.fixed-column {
+    position: absolute;
+    display: inline-block;
+    width: auto;
+    border-right: 1px solid #ddd;
+  }
+  @media(min-width:768px) {
+    .table-responsive>.fixed-column {
+        display: none;
+    }
   }
 }

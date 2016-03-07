@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Productos.aspx.cs" Inherits="WebAdmin.Tipos" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Productos.aspx.cs" Inherits="WebAdmin.Productos" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
@@ -44,12 +44,7 @@
               </div>
               <div class="panel-body">
                   <!-- Remove brand select in order to get the distribuitor brand of the user -->
-                  <% if (User.Identity.Name.Equals("admin"))
-                     {
-                         brandInputFieldDiv.Visible = true;
-                         autoBrand.Visible = false; 
-                     }%>
-                  <div runat="server" visible="false" id="brandInputFieldDiv" class="input-group">
+                  <div runat="server" visible="true" id="brandInputFieldDiv" class="input-group">
                       <asp:DropDownList ID="brandInputField" AppendDataBoundItems="true" ClientIDMode="Static" runat="server" CssClass="form-control" >
                             <asp:ListItem Value="0">Selecciona una marca</asp:ListItem>
                     </asp:DropDownList>

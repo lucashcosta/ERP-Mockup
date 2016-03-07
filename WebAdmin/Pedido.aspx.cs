@@ -109,7 +109,7 @@ namespace WebAdmin
         private const string f_refPromo = "ctl00$MainContent$refPromo";
         private const string f_estimatedTime = "ctl00$MainContent$estimatedTime";
         private const string f_reqNotes = "ctl00$MainContent$reqNotes";
-        private const string f_sumbitBtn = "ctl00$MainContent$submitBtn";
+        private const string f_SubmitBtn = "ctl00$MainContent$submitBtn";
 
 
 
@@ -142,7 +142,7 @@ namespace WebAdmin
                 //BindClientsGrid();
                 BindRutesDropD();
 
-                if (User.Identity.Name.Equals("admin"))
+                if (true)
                 {
                     //Bind all brands
                     BindBrandsDropDown();
@@ -444,20 +444,9 @@ namespace WebAdmin
                     e.Row.CssClass = "success";
                     return;
                 }
-                if (e.Row.Cells[2].Text == "Entregado &amp; no pagado")
+                else
                 {
                     e.Row.CssClass = "danger";
-                    return;
-                }
-                if (e.Row.Cells[2].Text == "Pagado &amp; no entregado")
-                {
-                    e.Row.CssClass = "warning";
-                    return;
-                }
-                if (e.Row.Cells[2].Text == "Cancelado")
-                {
-                    e.Row.CssClass = "danger";
-                    return;
                 }
             }
         }
@@ -558,7 +547,7 @@ namespace WebAdmin
         private void ShowRecentclientActivity()
         {
             //Bind with lastName criteria
-            string strQuery = "SELECT TOP 3 id_pedido, "
+            string strQuery = "SELECT TOP 3 id_pedido, notas_orden,"
                                 + "producto_orden, tipoProducto_orden, cantidadProducto_orden, producto2_orden, tipoProducto2_orden, cantidadProducto2_orden, producto3_orden, tipoProducto3_orden, cantidadProducto3_orden, "
                                 + "producto4_orden, tipoProducto4_orden, cantidadProducto4_orden, producto5_orden, tipoProducto5_orden, cantidadProducto5_orden, producto6_orden, tipoProducto6_orden, cantidadProducto6_orden, "
                                 + "producto7_orden, tipoProducto7_orden, cantidadProducto7_orden, producto8_orden, tipoProducto8_orden, cantidadProducto8_orden, producto9_orden, tipoProducto9_orden, cantidadProducto9_orden, "
@@ -786,7 +775,7 @@ namespace WebAdmin
                 command.Parameters.AddWithValue("@payMethod", Request.Form.Get(f_payMethod));
 
                 // If admin, use selected brand, else use Session[UserBinds]
-                if (User.Identity.Name.Equals("admin"))
+                if (true)
                     command.Parameters.AddWithValue("@brand", brandDropD.SelectedItem.Text.Trim());
                 else
                     command.Parameters.AddWithValue("@brand", m_UserBinds[2]);
@@ -1025,7 +1014,7 @@ namespace WebAdmin
                 command.Parameters.AddWithValue("@payMethod", Request.Form.Get(f_payMethod));
 
                 // If admin, use selected brand, else use Session[UserBinds]
-                if (User.Identity.Name.Equals("admin"))
+                if (true)
                     command.Parameters.AddWithValue("@brand", brandDropD.SelectedItem.Text.Trim());
                 else
                     command.Parameters.AddWithValue("@brand", m_UserBinds[2]);

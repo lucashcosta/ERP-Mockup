@@ -6,6 +6,14 @@
     <%--<link rel="stylesheet" type="text/css" href="/css/ui-hot-sneaks.datepick.css" id="themeTR">
     <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/hot-sneaks/jquery-ui.css"> --%>
 
+    <style type="text/css">
+
+    input[type="number"] {
+        width:50px;
+    }
+
+    </style>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="FeaturedContent" runat="server">
 </asp:Content>
@@ -355,21 +363,96 @@
                                     <%--<span id="clientLabel" style="margin-left:10px; margin-bottom:30px;" class="label label-default">Cliente nuevo</span>--%>
                                 </h4>
                                 <span class="pull-right clickable"><i id="shoppingCartSpan" class="fa fa-chevron-up"></i></span>
+                                <span title="Edit order" class="pull-right editable"><i id="editCartSpan" class="fa fa-pencil pull-right"></i></span>
+                                <span title="Save" class="pull-right editable cancelable hidden"><i id="saveCartSpan" class="fa fa-save pull-right"></i></span>
+                                <span title="Cancel" style="margin-right: 66px" class="pull-right editable cancelable hidden"><i id="cancelCartSpan" class="fa fa-times pull-right"></i></span>
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body" style="padding: 0px;">
                                 <div class="table-responsive">
-                                <asp:GridView ID="shopppingGrid" runat="server" AutoGenerateColumns="false" CssClass="table table-bordered table-striped table-hover">
+                                <asp:GridView ID="shopppingGrid" ClientIDMode="Static" runat="server" AutoGenerateColumns="false" CssClass="table table-responsive table-bordered table-striped table-hover table-panelfit">
                                     <Columns>
-                                        <asp:BoundField ItemStyle-Width = "150px"
-                                         DataField = "Producto" HeaderText = "Producto" />
-                                        <asp:BoundField ItemStyle-Width = "150px"
-                                         DataField = "Tipo" HeaderText = "Tipo" />
-                                        <asp:BoundField ItemStyle-Width = "150px" ItemStyle-Font-Bold="true"
-                                         DataField = "Precio" HeaderText = "Precio" />
-                                        <asp:BoundField ItemStyle-Width = "150px"
-                                         DataField = "Cantidad" HeaderText = "Cantidad" />
-                                        <asp:BoundField ItemStyle-Width = "150px" ItemStyle-Font-Bold="true"
-                                         DataField = "Total" HeaderText = "Total" />
+                                        <asp:TemplateField ItemStyle-Width="100px" ItemStyle-CssClass="menu hidden" HeaderStyle-CssClass="menu hidden" >
+                                            <HeaderTemplate>
+                                                Total
+                                            </HeaderTemplate>
+                                            <ItemTemplate>
+                                                <button type="button" class=" add-edit btn btn-success btn-xs">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                                <button type="button" class="remove-edit btn btn-danger btn-xs">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField ItemStyle-CssClass="ignore">
+                                            <HeaderTemplate>
+                                                Producto
+                                            </HeaderTemplate>
+                                            <ItemTemplate>
+                                               <%--<asp:LinkButton runat="server" ForeColor="White" CssClass="btn btn-xs btn-info" CommandName="Select" Font-Underline="false" Font-Overline="false" Font-Size="Small"><i class="fa fa-search-plus icon-white icon-fix"></i> Detalles</asp:LinkButton>--%>
+                                                <div class="default">
+                                                  <%# Eval("Producto") %>
+                                                </div>  
+                                                    <select class="menu product-menu hidden">
+                                                    </select>
+                                                <%--<span class="label label-default"><asp:LinkButton runat="server" ><i class="fa fa-book icon-fix"></i> Check</asp:LinkButton></span>--%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField ItemStyle-CssClass="ignore">
+                                            <HeaderTemplate>
+                                                Tipo
+                                            </HeaderTemplate>
+                                            <ItemTemplate>
+                                               <%--<asp:LinkButton runat="server" ForeColor="White" CssClass="btn btn-xs btn-info" CommandName="Select" Font-Underline="false" Font-Overline="false" Font-Size="Small"><i class="fa fa-search-plus icon-white icon-fix"></i> Detalles</asp:LinkButton>--%>
+                                                <div class="default">
+                                                  <%# Eval("Tipo") %>
+                                                </div>  
+                                                    <select class="type-menu menu hidden">
+                                                    </select>
+                                                <%--<span class="label label-default"><asp:LinkButton runat="server" ><i class="fa fa-book icon-fix"></i> Check</asp:LinkButton></span>--%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField ItemStyle-CssClass="ignore" >
+                                            <HeaderTemplate>
+                                                Precio
+                                            </HeaderTemplate>
+                                            <ItemTemplate>
+                                               <%--<asp:LinkButton runat="server" ForeColor="White" CssClass="btn btn-xs btn-info" CommandName="Select" Font-Underline="false" Font-Overline="false" Font-Size="Small"><i class="fa fa-search-plus icon-white icon-fix"></i> Detalles</asp:LinkButton>--%>
+                                                <div class="price-edit menu hidden">
+                                                </div> 
+                                                <div class="default">
+                                                  <%# Eval("Precio") %>
+                                                </div>  
+                                                <%--<span class="label label-default"><asp:LinkButton runat="server" ><i class="fa fa-book icon-fix"></i> Check</asp:LinkButton></span>--%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField ItemStyle-Width="40px" ItemStyle-CssClass="ignore" >
+                                            <HeaderTemplate>
+                                                Cantidad
+                                            </HeaderTemplate>
+                                            <ItemTemplate>
+                                               <%--<asp:LinkButton runat="server" ForeColor="White" CssClass="btn btn-xs btn-info" CommandName="Select" Font-Underline="false" Font-Overline="false" Font-Size="Small"><i class="fa fa-search-plus icon-white icon-fix"></i> Detalles</asp:LinkButton>--%>
+                                                <div class="qtyBefore default">
+                                                  <%# Eval("Cantidad") %>
+                                                </div>  
+                                                <input class="qtyEdit menu hidden" type="number" name="quantity" min="1">
+                                                <%--<span class="label label-default"><asp:LinkButton runat="server" ><i class="fa fa-book icon-fix"></i> Check</asp:LinkButton></span>--%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField ItemStyle-CssClass="ignore" >
+                                            <HeaderTemplate>
+                                                Total
+                                            </HeaderTemplate>
+                                            <ItemTemplate>
+                                               <%--<asp:LinkButton runat="server" ForeColor="White" CssClass="btn btn-xs btn-info" CommandName="Select" Font-Underline="false" Font-Overline="false" Font-Size="Small"><i class="fa fa-search-plus icon-white icon-fix"></i> Detalles</asp:LinkButton>--%>
+                                                <div class="total-edit menu hidden">
+                                                </div>
+                                                <div class="default">
+                                                  <%# Eval("Total") %>
+                                                </div>  
+                                                <%--<span class="label label-default"><asp:LinkButton runat="server" ><i class="fa fa-book icon-fix"></i> Check</asp:LinkButton></span>--%>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
                                    </Columns>
                                 </asp:GridView>
                                 </div>
@@ -625,7 +708,7 @@
                                     </div>
                                 </div>
                                 <p></p>
-                                <asp:LinkButton CssClass="pull-right btn btn-success" runat="server" id="submitBtn" Text="Sumbit" ForeColor="White" OnClientClick="return ValidateForm();" OnClick="submitBtn_Click"></asp:LinkButton>
+                                <asp:LinkButton CssClass="pull-right btn btn-success" runat="server" id="submitBtn" Text="Submit" ForeColor="White" OnClientClick="return ValidateForm();" OnClick="submitBtn_Click"></asp:LinkButton>
                             </div>
                         </div>
                   </div>
@@ -639,6 +722,17 @@
         <script type="text/javascript" src="js/jquery.datepick-es.js"></script>
         <script>
 
+            // Get query string
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            }
+
             if (!Modernizr.touch || !Modernizr.inputtypes.date) {
                 //alert("called");
                 //$('#edit_OrderDate').datepick({ dateFormat: "dd/mm/yy" });                
@@ -650,6 +744,269 @@
                 $.datepick.regionalOptions['es']));
             }
             
+            $('.table-responsive').on('show.bs.dropdown', function () {
+                $('.table-responsive').css("overflow", "inherit");
+            });
+
+            $('.table-responsive').on('hide.bs.dropdown', function () {
+                $('.table-responsive').css("overflow", "auto");
+            })
+
+            $("#editCartSpan").click(function () {
+                $(this).addClass('hidden');
+                startEditMode();
+            });
+
+            $("#cancelCartSpan").click(function () {
+                exitEditMode();
+            });
+
+            $("#saveCartSpan").click(function () {
+                saveOrderChanges();
+            });
+
+            /* Edit type logic
+            -------------------------*/
+            function askForTypes() {
+                $.ajax({
+                    type: "POST",
+                    url: "Detalles.aspx/GetTypes",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    traditional: true,
+                    success: OnSuccessGetEditTypes,
+                    failure: function (response) {
+                        alert("Fail: " + response.d);
+                    },
+                    error: function (response) {
+                        alert("Error: " + response.d);
+                    }
+                });
+            }
+
+            function OnSuccessGetEditTypes(response) {
+                var json = JSON.parse(response.d);
+                $("#shoppingCart").enable();
+                populateEditType(json);
+            }
+
+            function populateEditType(productList) {
+                var typeMenu = $(".type-menu")
+                typeMenu.empty();
+                $.each(productList, function () {
+                    typeMenu.append($("<option data-increase=" + this.IncreaseRatio + "/>").val(this.IdType).text(this.TypeName));
+                });
+
+                for (var i = 0; i < typeMenu.length; ++i) {
+                    selectDropDownByText(typeMenu.eq(i), typeMenu.eq(i).prev().text().trim());
+                }
+            }
+
+            // Set data-price to 'select' element
+            $('.qtyEdit').on('change', function () {
+                calculateTotalPrice($(this));
+            });
+
+            // Set data-price to 'select' element
+            $('.type-menu').on('change', function () {
+                var priceValue = $(this).find(':selected').data('increase');
+                $(this).data('increase', priceValue);
+
+                calculateTotalPrice($(this));
+            });
+
+            /* Edit product logic
+            -------------------------*/
+            function askForProducts() {
+                var id = getParameterByName('Id');
+                $.ajax({
+                    type: "POST",
+                    url: "Detalles.aspx/GetProducts",
+                    data: "{id: " + id + "}",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    traditional: true,
+                    success: OnSuccessGetEditProducts,
+                    failure: function (response) {
+                        alert("Fail: " + response.d);
+                    },
+                    error: function (response) {
+                        alert("Error: " + response.d);
+                    }
+                });
+            }
+
+            function OnSuccessGetEditProducts(response) {
+                var json = JSON.parse(response.d);
+                populateEditProduct(json);
+            }
+
+            function populateEditProduct(productList) {
+                var productMenu = $(".product-menu")
+                productMenu.empty();
+                $.each(productList, function () {
+                    productMenu.append($("<option data-price=" + this.UnitPrice + "/>").val(this.IdProduct).text(this.ProductName));
+                });
+
+                for (var i = 0; i < productMenu.length; ++i) {
+                    selectDropDownByText(productMenu.eq(i), productMenu.eq(i).prev().text().trim());
+                }
+            }
+
+            // Set data-price to 'select' element
+            $('.product-menu').change(function () {
+                var priceValue = $(this).find(':selected').data('price');
+                $(this).data('price', priceValue);
+                calculateTotalPrice($(this));
+            });
+
+            /* Remove - Add functions
+            ------------------------------*/
+            $(document).on("click", ".remove-edit", function () {
+                $(this).closest('tr').addClass('hidden removed')
+            });
+
+            $(document).on("click", ".add-edit", function () {
+                var tr = $(this).closest('tr');
+                var clone = tr.clone(true, true)
+
+                // Set default values
+                clone.find('.qtyEdit').val(1);
+                clone.find('.product-menu').trigger('change');
+                clone.find('.type-menu').trigger('change');
+
+                tr.after(clone.addClass('added').fadeIn('slow'));
+            });
+
+            /* Confirm changes
+            -------------------------------*/
+            function saveOrderChanges() {
+                var order = getOrderFromTable();
+                sendOrderUpdate(order)
+            }
+
+            function getOrderFromTable() {
+                var id = getParameterByName('Id');
+                var newOrder = {
+                    items: [],
+                    id: id
+                }
+
+                $('#shopppingGrid > tbody  > tr:not(.hidden):not(:first)').each(function () {
+                    var product = $(this).find('.product-menu');
+                    var type = $(this).find('.type-menu');
+                    var qty = $(this).find('.qtyEdit');
+                    var total = $(this).find('.total-edit');
+
+                    var order = {
+                        productId: product.val(),
+                        productPrice: product.data('price'),
+                        productName: product.children(':selected').text(),
+                        typeId: type.val(),
+                        typeIncrease: type.data('increase'),
+                        typeName: type.children(':selected').text(),
+                        qty: qty.val(),
+                        total: total.val()
+                    }
+
+                    newOrder.items.push(order)
+                });
+
+                return newOrder;
+            }
+
+            function sendOrderUpdate(order) {
+                $.ajax({
+                    type: "POST",
+                    url: "Detalles.aspx/UpdateOrder",
+                    data: JSON.stringify({order}),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    traditional: true,
+                    success: OnSuccessUpdateOrder,
+                    failure: function (response) {
+                        alert("Fail: " + response.d);
+                    },
+                    error: function (response) {
+                        alert("Error: " + response.d);
+                    }
+                });
+            }
+
+            function OnSuccessUpdateOrder(response) {
+                location.reload();
+            }
+
+            /* Common edit functions
+            ------------------------------*/
+
+            function exitEditMode() {
+                $("#shoppingCart").enable();
+
+                $("#editCartSpan").removeClass('hidden');
+                $(".cancelable").addClass('hidden')
+                $(".menu").addClass('hidden');
+                $(".default").removeClass('hidden');
+
+                // Deleted / Added rows
+                $(".removed").removeClass('hidden');
+                $(".added").remove();
+
+                resetDefaults();
+            }
+
+            function startEditMode() {
+                $("#shoppingCart").disable();
+
+                askForProducts();
+                askForTypes();
+
+                $(".cancelable").removeClass("hidden");
+                $(".menu").removeClass('hidden');
+                $(".default").addClass('hidden');
+
+                setDefaults();
+            }
+
+            function setDefaults() {
+                var divsBefore = $(".qtyBefore");
+                var inputEdit = $(".qtyEdit");
+
+                divsBefore.addClass('hidden');
+
+                for (var i = 0; i < divsBefore.length; ++i) {
+                    inputEdit.eq(i).val(divsBefore.eq(i).text().trim())
+                }
+            }
+
+            function resetDefaults() {
+                var divsBefore = $(".qtyBefore");
+                divsBefore.removeClass('hidden');
+            }
+
+            function selectDropDownByText(menu, text) {
+                menu.children('option').each(function () {
+                    if ($(this).text() == text) {
+                        $(this).attr('selected', 'selected');
+                        $(this).trigger('change');
+                    }
+                });
+            }
+
+            function calculateTotalPrice($scope) {
+                var price = $scope.closest('tr').find('.product-menu').data('price');
+                var increase = $scope.closest('tr').find('.type-menu').data('increase');
+                var qty = $scope.closest('tr').find('.qtyEdit').val();
+
+                var singleProductPrice = price + (price * (increase / 100));
+                var total = singleProductPrice * qty;
+
+                $scope.closest('tr').find('.price-edit').text('$' + singleProductPrice);
+                $scope.closest('tr').find('.total-edit').text('$' + total.toFixed(2)).val(total);
+            }
+
+            /* End Common edit functions
+            ------------------------------*/
 
             $(document).on('click', '.panel-heading span.clickable', function (e) {
                 var $this = $(this);
@@ -713,6 +1070,15 @@
                     alert("Introduce cantidad de pago");
                     return false;
                 }
+            }
+
+            // Extensions for disabling
+            $.fn.disable = function () {
+                this.addClass('disabled');
+            }
+
+            $.fn.enable = function () {
+                this.removeClass('disabled');
             }
 
             // Tooltips

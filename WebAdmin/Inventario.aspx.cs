@@ -8,7 +8,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Services;
 using System.Configuration;
-using System.Web.Http;
 using WebAdmin.Classes;
 
 namespace WebAdmin
@@ -29,6 +28,14 @@ namespace WebAdmin
         public static List<ItemsPrepared> GetRequestedItems(string startDate, string endDate)
         {
             List<ItemsPrepared> popItems = new List<ItemsPrepared>();
+            if (String.IsNullOrEmpty(startDate))
+            {
+                startDate = DateTime.Now.ToString("DD/MM/YYYY");
+            }
+            if (String.IsNullOrEmpty(endDate))
+            {
+                endDate = DateTime.Now.ToString("DD/MM/YYYY");
+            }
             DataTable table = new DataTable();
             using (var con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString))
             using (var cmd = new SqlCommand("GetInventory", con))

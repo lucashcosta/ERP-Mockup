@@ -14,21 +14,26 @@
     <asp:ContentPlaceHolder runat="server" ID="HeadContent" />
 
     <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap-flaty.css" rel="stylesheet">
+    <link href="css/bootstrap-yeti.css" rel="stylesheet">
 
     <!-- Add custom CSS here -->
     <link href="css/sb-admin.css" rel="stylesheet">
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/morris.css">
     
     <!-- FooTable CSS -->
     <link href="css/FooTable/footable.core.css" rel="stylesheet" type="text/css" />
 
-    <!-- Date range picker -->
-    <link rel="stylesheet" type="text/css" href="/css/daterangepicker-bs3.css" />
+    <link href="js/pickdate/themes/default.css" rel="stylesheet" type="text/css" />
+    <link href="js/pickdate/themes/default.date.css" rel="stylesheet" type="text/css" />
+    <link href="js/pickdate/themes/default.time.css" rel="stylesheet" type="text/css" />
 
     <!-- Print CSS -->
     <!--<link rel="stylesheet" href="css/morris.css">  Morris para Dashboard o graphs-->
+    
+    <!-- Include Date Range Picker -->
+    <!-- <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" /> -->
+    <link href="css/daterangepicker.css" rel="stylesheet" type="text/css" />
 
 </head>
 <body>
@@ -100,7 +105,15 @@
               <ul class="dropdown-menu">
                 <li><a href="/ConsultaPedidos">Consulta Pedidos</a></li>
                 <li><a href="/ConsultaClientes">Clientes</a></li>
-                  <li><a href="/Inventario">Inventario</a></li>
+                <li><a href="/Inventario">Inventario</a></li>
+                <%--<li><a href="#">Third Item</a></li>
+                <li><a href="#">Last Item</a></li>--%>
+              </ul>
+            </li>
+              <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-file-text-o"></i> Reportes <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="/Reportes/CierreCaja">Cierres de caja</a></li>
                 <%--<li><a href="#">Third Item</a></li>
                 <li><a href="#">Last Item</a></li>--%>
               </ul>
@@ -201,7 +214,9 @@
         <asp:ContentPlaceHolder runat="server" ID="FeaturedContent" />
         <!-- JavaScript Core -->
         <%--<script src="js/jquery-1.11.0.js"></script>--%>
-        <script src="/js/bootstrap.js"></script>
+        <%--<script src="/js/bootstrap.js"></script>--%>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <!-- MetisMenu -->
         <script src="/js/jquery.metisMenu.js"></script>
         <!-- FooTable -->
@@ -212,7 +227,14 @@
         <script src="/js/maskedinput.min.js" type="text/javascript"></script>
         <!-- Ranged Dates -->
         <script type="text/javascript" src="/js/moment.min.js"></script>
-        <script type="text/javascript" src="/js/daterangepicker.js"></script>
+        <!-- <script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script> -->
+        <script src="/js/daterangepicker.js" type="text/javascript"></script>
+
+        <!-- Pickdate -->
+        <script src="/js/pickdate/picker.js" type="text/javascript"></script>
+        <script src="/js/pickdate/picker.date.js" type="text/javascript"></script>
+        <script src="/js/pickdate/picker.time.js" type="text/javascript"></script>
+        <script src="/js/pickdate/translations/es_ES.js"></script>
 
         <script src="/js/raphael-min.js" type="text/javascript"></script>
         <script src="/js/morris.js" type="text/javascript"></script>
@@ -250,8 +272,6 @@
                 $("#fillClientDetails").append("<br>Telefono: " + items[0].Phone);
                 $("#fillClientDetails").append("<br>Movil: " + items[0].Mobile);
                 $("#fillClientDetails").append("<br>Plano: " + items[0].Plano);
-                
-
             }
 
             $("#createRequest").click(function () {
@@ -270,7 +290,7 @@
                         alert(response.d);
                     }
                 });
-            });
+            })
 
             function OnSuccessSetRequestFromStack(response) {
                 $("#closeRequest").addClass("hidden");

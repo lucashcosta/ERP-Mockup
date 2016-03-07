@@ -8,7 +8,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Services;
 using System.Configuration;
-using System.Web.Http;
+using WebAdmin.Classes;
+using Newtonsoft.Json;
+using System.Web.Security;
 
 namespace WebAdmin
 {
@@ -44,6 +46,7 @@ namespace WebAdmin
             dummy.Columns.Add("id_cliente");
             dummy.Columns.Add("nombre_cliente");
             //dummy.Columns.Add("apellido_cliente");
+            dummy.Columns.Add("movil_cliente");
             dummy.Columns.Add("telefono_cliente");
             dummy.Columns.Add("plano_cliente");
             dummy.Columns.Add("fechaEntrega_orden");
@@ -60,18 +63,19 @@ namespace WebAdmin
 
             // Footable
             TableCellCollection cells = gridView.HeaderRow.Cells;
-            cells[0].Attributes.Add("data-hide", "phone,tablet");
+            //cells[0].Attributes.Add("data-hide", "phone,tablet");
             cells[1].Attributes.Add("data-hide", "phone,tablet");
+            cells[2].Attributes.Add("data-hide", "phone,tablet");
             //cells[2].Attributes.Add("data-hide", "phone,");
             //cells[3].Attributes.Add("data-hide", "phone,");
-            cells[3].Attributes.Add("data-hide", "phone,tablet");
             cells[4].Attributes.Add("data-hide", "phone,tablet");
             cells[5].Attributes.Add("data-hide", "phone,tablet");
-            cells[6].Attributes.Add("data-hide", "phone,");
-            cells[7].Attributes.Add("data-hide", "phone,tablet");
+            cells[6].Attributes.Add("data-hide", "phone,tablet");
+            cells[7].Attributes.Add("data-hide", "phone,");
             cells[8].Attributes.Add("data-hide", "phone,tablet");
             cells[9].Attributes.Add("data-hide", "phone,tablet");
             cells[10].Attributes.Add("data-hide", "phone,tablet");
+            cells[11].Attributes.Add("data-hide", "phone,tablet");
         }
 
         private DataTable GetData(SqlCommand cmd)
@@ -85,6 +89,126 @@ namespace WebAdmin
             sda.SelectCommand = cmd;
             sda.Fill(dt);
             return dt;
+        }
+
+        [WebMethod]
+        public static string SetStatusGroup(string[] ids)
+        {
+            DataTable _myDataTable = new DataTable();
+
+            // ID column (EmployeeID idiot column)
+            _myDataTable.Columns.Add("EmployeeID ", typeof(int));
+
+            for (int i = 0; i < ids.Length; i++)
+                _myDataTable.Rows.Add(Int32.Parse(ids[i]));
+
+            string strConnString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            SqlConnection sqlConnection1 = new SqlConnection(strConnString);
+
+            string query = "[SetStatusChanges]";
+            SqlCommand cmd = new SqlCommand(query);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Array", _myDataTable);
+            cmd.Parameters.AddWithValue("@Status", "Entregado & pagado");
+
+            cmd.Connection = sqlConnection1;
+            sqlConnection1.Open();
+
+            Object rowsAffected = cmd.ExecuteScalar();
+            sqlConnection1.Close();
+
+            return "SUCCESS";
+        }
+
+        [WebMethod]
+        public static string AskCloseBox()
+        {
+            // Table to store the query results
+            DataTable table = new DataTable();
+
+            // Class to store the table
+            BoxTable boxTable;
+
+            // Creates a SQL connection
+            string strConnString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (var connection = new SqlConnection(strConnString))
+            {
+                connection.Open();
+
+                // Creates a SQL command
+                using (var command = new SqlCommand("SELECT * FROM View_AskBox", connection))
+                {
+                    // Loads the query results into the table
+                    table.Load(command.ExecuteReader());
+                }
+
+                boxTable = new BoxTable(table);
+                connection.Close();
+            }
+
+            string json = JsonConvert.SerializeObject(boxTable);
+            return json;
+        }
+
+        [WebMethod]
+        public static string TellCloseBox()
+        {
+            string strConnString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            string userId = Membership.GetUser().ProviderUserKey.ToString();
+
+            SqlConnection sqlConnection1 = new SqlConnection(strConnString);
+
+            string query = "[TellCloseBox]";
+            SqlCommand cmd = new SqlCommand(query);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id_usuario", new Guid(userId));
+
+            cmd.Connection = sqlConnection1;
+            sqlConnection1.Open();
+
+            Object rowsAffected = cmd.ExecuteScalar();
+            sqlConnection1.Close();
+
+            return "SUCCESS";
+        }
+
+        [WebMethod]
+        public static string UpdateDeliverDate(string[] ids, string modDate)
+        {
+            DateTime setDate = Convert.ToDateTime(modDate);
+            DataTable _myDataTable = new DataTable();
+
+            // ID column (EmployeeID idiot column)
+            _myDataTable.Columns.Add("EmployeeID ", typeof(int));
+
+            for (int i = 0; i < ids.Length; i++)
+            {
+                try
+                {
+                    _myDataTable.Rows.Add(Int32.Parse(ids[i]));
+                }
+                catch (Exception ex) { }
+            }
+
+            string strConnString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            SqlConnection sqlConnection1 = new SqlConnection(strConnString);
+
+            string query = "[SetDeliverDatesChanges]";
+            SqlCommand cmd = new SqlCommand(query);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Array", _myDataTable);
+            cmd.Parameters.AddWithValue("@NewDate", setDate);
+
+            cmd.Connection = sqlConnection1;
+            sqlConnection1.Open();
+
+            Object rowsAffected = cmd.ExecuteScalar();
+            sqlConnection1.Close();
+
+            return "SUCCESS";
         }
 
         /*
@@ -124,7 +248,7 @@ namespace WebAdmin
                     sda.SelectCommand = cmd;
                     using (DataSet ds = new DataSet())
                     {
-                        sda.Fill(ds, "View_ClientesPedido");
+                        sda.Fill(ds, "View_ConsultaPedidos");
                         DataTable dt = new DataTable("PageCount");
                         dt.Columns.Add("PageIndex");
                         dt.Columns.Add("PageSize");

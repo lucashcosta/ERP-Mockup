@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 
 namespace WebAdmin
 {
-    public partial class Productos : System.Web.UI.Page
+    public partial class Tipos : System.Web.UI.Page
     {
         private static string[] m_UserBinds;
         int brandId;

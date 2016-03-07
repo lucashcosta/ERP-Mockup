@@ -10,7 +10,7 @@
 namespace WebAdmin {
     
     
-    public partial class Productos {
+    public partial class Tipos {
         
         /// <summary>
         /// typeDrop control.

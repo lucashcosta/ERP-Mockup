@@ -6,6 +6,11 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
+using System.Web.Services;
+using Newtonsoft.Json;
+using WebAdmin.Classes;
+using System.Collections;
+using WebAdmin.Classes.Order;
 
 namespace WebAdmin
 {
@@ -67,7 +72,6 @@ namespace WebAdmin
                     HandleReqStatus();
                     SetItems();
                     FillOrder();
-                    
                 }
             }
         }
@@ -478,7 +482,7 @@ namespace WebAdmin
         {
             var connection = new SqlConnection(connectionString);
             connection.Open();
-            string sql_update = "UPDATE Pedido SET status_orden = @newStatus, fechaEntrega_orden = @newOrderDate, pagoCon_orden = @newPaid, formaPago_orden = @newPayMethod, locked_pedido = @lockOrder, notas_orden = @orderNotes WHERE id_pedido = @id"; // Update Desc only
+            string sql_update = "UPDATE Pedido SET status_orden = @newStatus, fechaEntrega_orden = @newOrderDate, pagoCon_orden = @newPaid, formaPago_orden = @newPayMethod, locked_pedido = @lockOrder, notas_orden = @orderNotes, fecha_cierre_orden = @closeDate WHERE id_pedido = @id"; // Update Desc only
 
             try
             {
@@ -490,6 +494,11 @@ namespace WebAdmin
                 command.Parameters.AddWithValue("@id", Request.QueryString["Id"]);
                 command.Parameters.AddWithValue("@lockOrder", lockOrder);
                 command.Parameters.AddWithValue("@orderNotes", orderNotes);
+
+                if (status.ToLower() == "entregado & pagado")
+                    command.Parameters.AddWithValue("@closeDate", DateTime.Now);
+                else
+                    command.Parameters.AddWithValue("@closeDate", "");
 
                 command.ExecuteNonQuery();
                 command.Parameters.Clear();
@@ -505,6 +514,162 @@ namespace WebAdmin
                 Response.Write(htmlError);
                 //Response.Write(s_exp);
             }
+        }
+
+        [WebMethod]
+        public static string GetProducts(int id)
+        {
+            // Table to store the query results
+            DataTable table = new DataTable();
+
+            // Class to store the table
+            List<ProductItem> productList = new List<ProductItem>();
+
+            // Creates a SQL connection
+            string strConnString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (var connection = new SqlConnection(strConnString))
+            {
+                connection.Open();
+
+                // Creates a SQL command
+                using (var command = new SqlCommand("SELECT * FROM View_AskProductosParaPedido WHERE id_pedido = @ID", connection))
+                {
+                    // Loads the query results into the table
+                    command.Parameters.AddWithValue("@ID", id);
+                    table.Load(command.ExecuteReader());
+                }
+
+                // Populate list of products
+                foreach (DataRow row in table.Rows)
+                {
+                    productList.Add(new ProductItem(row));
+                }
+                connection.Close();
+            }
+
+            string json = JsonConvert.SerializeObject(productList);
+            return json;
+        }
+
+        [WebMethod]
+        public static string GetTypes()
+        {
+            // Table to store the query results
+            DataTable table = new DataTable();
+
+            // Class to store the table
+            List<ProductTypeItem> productList = new List<ProductTypeItem>();
+
+            // Creates a SQL connection
+            string strConnString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (var connection = new SqlConnection(strConnString))
+            {
+                connection.Open();
+
+                // Creates a SQL command
+                using (var command = new SqlCommand("SELECT id_tipo, nombre_tipo, aumentoPorcentaje_tipo FROM Tipos", connection))
+                {
+                    // Loads the query results into the table
+                    table.Load(command.ExecuteReader());
+                }
+
+                // Populate list of products
+                foreach (DataRow row in table.Rows)
+                {
+                    productList.Add(new ProductTypeItem(row));
+                }
+                connection.Close();
+            }
+
+            string json = JsonConvert.SerializeObject(productList);
+            return json;
+        }
+
+        [WebMethod]
+        public static string UpdateOrder(IDictionary<string, object> order)
+        {
+            // Create object
+            Order updatedOrder = new Order(order);
+
+            // Creates a SQL connection
+            string strConnString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (var connection = new SqlConnection(strConnString))
+            {
+                connection.Open();
+
+                // Creates a SQL command
+                using (var command = new SqlCommand(BuildUpdateOrderQuery(updatedOrder), connection))
+                {
+                    // Set variable parameters
+                    for (int i = 1; i <= updatedOrder.Items.Count; ++i)
+                    {
+                        command.Parameters.AddWithValue("@productName" + i, updatedOrder.Items[i - 1].productName);
+                        command.Parameters.AddWithValue("@typeName" + i, updatedOrder.Items[i - 1].typeName);
+                        command.Parameters.AddWithValue("@qty" + i, updatedOrder.Items[i - 1].quantity);
+                        command.Parameters.AddWithValue("@subTotal" + i, updatedOrder.Items[i - 1].total);
+                        command.Parameters.AddWithValue("@unitPrice" + i, updatedOrder.Items[i - 1].GetUnitPrice());
+                    }
+
+                    for (int i = 9; i > updatedOrder.Items.Count; --i)
+                    {
+                        command.Parameters.AddWithValue("@productName" + i, String.Empty);
+                        command.Parameters.AddWithValue("@typeName" + i, String.Empty);
+                        command.Parameters.AddWithValue("@qty" + i, 0);
+                        command.Parameters.AddWithValue("@subTotal" + i, 0);
+                        command.Parameters.AddWithValue("@unitPrice" + i, 0);
+                    }
+
+                    command.Parameters.AddWithValue("@grandTotal", updatedOrder.GetGrandTotal());
+                    command.Parameters.AddWithValue("@id", updatedOrder.OrderId);
+                    command.ExecuteScalar();
+                }
+                connection.Close();
+            }
+
+            return "SUCCESS";
+        }
+
+        private const int MAX_ITEMS = 9;
+        private static string BuildUpdateOrderQuery(Order updatedOrder)
+        {
+            string queryUpdate = "UPDATE Pedido SET ";
+
+            //+ "producto_orden, tipoProducto_orden, cantidadProducto_orden, producto2_orden, tipoProducto2_orden, cantidadProducto2_orden, producto3_orden, tipoProducto3_orden, cantidadProducto3_orden, producto4_orden, tipoProducto4_orden, cantidadProducto4_orden, "
+            //+ "producto5_orden, tipoProducto5_orden, cantidadProducto5_orden, producto6_orden, tipoProducto6_orden, cantidadProducto6_orden, producto7_orden, tipoProducto7_orden, cantidadProducto7_orden, producto8_orden, tipoProducto8_orden, cantidadProducto8_orden, producto9_orden, tipoProducto9_orden, cantidadProducto9_orden";
+            //+ "subTotalProducto_orden, subTotalProducto2_orden, subTotalProducto3_orden, subTotalProducto4_orden, subTotalProducto5_orden, subTotalProducto6_orden, subTotalProducto7_orden, subTotalProducto8_orden, subTotalProducto9_orden, "
+            //+ "precioProducto_orden, precioProducto2_orden, precioProducto3_orden, precioProducto4_orden, precioProducto5_orden, precioProducto6_orden, precioProducto7_orden, precioProducto8_orden, precioProducto9_orden,"
+
+            string queryValues = "";
+            for (int i = 1; i <= MAX_ITEMS; ++i)
+            {
+                // Create First Part: SET [Col] = [Value]
+                if (i == 1)
+                {
+                    queryUpdate += "producto_orden = @productName1, tipoProducto_orden = @typeName1, cantidadProducto_orden = @qty1, ";
+                    queryUpdate += "subTotalProducto_orden = @subTotal1, precioProducto_orden = @unitPrice1, ";
+                }
+                else
+                {
+                    queryUpdate += "producto" + i + "_orden = @productName" + i
+                        + ", tipoProducto" + i + "_orden = @typeName" + i
+                        + ", cantidadProducto" + i + "_orden = @qty" + i
+                        + ", subTotalProducto" + i + "_orden = @subTotal" + i
+                        + ", precioProducto" + i + "_orden = @unitPrice" + i
+                        + ", ";
+
+                    // If last loop
+                    if (i == MAX_ITEMS)
+                    {
+                        queryUpdate += "totalProductos_orden = @grandTotal";
+                    }
+                }
+            }
+
+            // Where [condition] part
+            queryUpdate += " WHERE id_pedido = @id";
+
+            return queryUpdate;
+            
         }
 
         protected void Page_PreRender(object sender, EventArgs e)
