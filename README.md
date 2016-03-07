@@ -1,5 +1,4 @@
-# ASP-Project
-ERP Mockup
+# ERP Mockup
 
 This projects involves the following concepts:
 + C#
