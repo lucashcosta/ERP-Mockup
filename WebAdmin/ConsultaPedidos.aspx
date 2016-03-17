@@ -187,7 +187,7 @@
                                 <%--<asp:BoundField DataField="apellido_cliente" HeaderStyle-Wrap="true" HeaderText="Apellido" />--%>
                                 <asp:BoundField DataField="movil_cliente" HeaderText="Movil" />
                                 <asp:BoundField DataField="telefono_cliente" HeaderText="Telefono" />
-                                <asp:BoundField DataField="plano_cliente" ItemStyle-Font-Bold="true" HeaderText="Plano"/>
+                                <asp:BoundField DataField="nombre_ruta" ItemStyle-Font-Bold="true" HeaderText="Ruta"/>
                                 <%--<asp:BoundField DataField="fechaEntrega_orden" ItemStyle-Width="150px" HeaderText="Fecha Entrega"/>--%>
                                 <asp:TemplateField ItemStyle-Width="150px" ItemStyle-CssClass="ignore">
                                     <HeaderTemplate>
@@ -764,7 +764,7 @@
                             //$("td", row).eq(3).html($(this).find("apellido_cliente").text());
                             $("td", row).eq(4).html($(this).find("movil_cliente").text());
                             $("td", row).eq(5).html($(this).find("telefono_cliente").text());
-                            $("td", row).eq(6).html($(this).find("plano_cliente").text());
+                            $("td", row).eq(6).html($(this).find("nombre_ruta").text());
                             $("td", row).eq(7).html($(this).find("fechaEntrega_orden").text());
                             $("td", row).eq(8).html($(this).find("direccion").text());
                             $("td", row).eq(9).html($(this).find("postal_cliente").text());

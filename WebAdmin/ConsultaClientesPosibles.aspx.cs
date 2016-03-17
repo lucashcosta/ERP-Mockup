@@ -86,7 +86,7 @@ namespace WebAdmin
         }
 
         [WebMethod]
-        public static string GetCloseClients(IDictionary<string, object> client, bool colony, bool rute, string date)
+        public static string GetCloseClients(IDictionary<string, object> client, bool colony, bool rute, bool cp, string date)
         {
             DataTable table = new DataTable();
             DateTime dateTime = Convert.ToDateTime(date);
@@ -103,26 +103,34 @@ namespace WebAdmin
                 connection.Open();
 
                 // Creates a SQL command, default is colony search
-                string sqlQuery = "SELECT id_cliente, nombre_cliente, apellido_cliente, colonia_cliente, nombre_ruta, id_ruta, postal_cliente, telefono_cliente, movil_cliente, plano_cliente" +
+                string sqlQuery = "SELECT id_cliente, nombre_cliente, apellido_cliente, colonia_cliente, nombre_ruta, id_ruta, postal_cliente, telefono_cliente, movil_cliente, plano_cliente, ultima_entrega" +
                         " FROM View_ClienteRutas WHERE colonia_cliente LIKE @Place AND id_cliente != @ThisClientID AND id_cliente not in (SELECT id_cliente FROM View_ClientesConPedido WHERE fechaEntrega_orden = @Date OR fechaEntrega_orden = CAST(GETDATE() AS DATE))";
                 if (colony)
                 {
-                    sqlQuery = "SELECT id_cliente, nombre_cliente, apellido_cliente, colonia_cliente, nombre_ruta, id_ruta, postal_cliente, telefono_cliente, movil_cliente, plano_cliente" +
+                    sqlQuery = "SELECT id_cliente, nombre_cliente, apellido_cliente, colonia_cliente, nombre_ruta, id_ruta, postal_cliente, telefono_cliente, movil_cliente, plano_cliente, ultima_entrega" +
                         " FROM View_ClienteRutas WHERE colonia_cliente LIKE @Place AND id_cliente != @ThisClientID AND id_cliente not in (SELECT id_cliente FROM View_ClientesConPedido WHERE fechaEntrega_orden = @Date OR fechaEntrega_orden = CAST(GETDATE() AS DATE))";
                 }
-                if (rute)
+                else if (rute)
                 {
-                    sqlQuery = "SELECT id_cliente, nombre_cliente, apellido_cliente, colonia_cliente, nombre_ruta, id_ruta, postal_cliente, telefono_cliente, movil_cliente, plano_cliente" +
-                        " FROM View_ClienteRutas WHERE id_ruta = @Place AND id_cliente != @ThisClientID AND id_cliente not in (SELECT id_cliente FROM View_ClientesConPedido WHERE fechaEntrega_orden = @Date OR fechaEntrega_orden = CAST(GETDATE() AS DATE))";
+                    sqlQuery = "SELECT id_cliente, nombre_cliente, apellido_cliente, colonia_cliente, nombre_ruta, id_ruta, postal_cliente, telefono_cliente, movil_cliente, plano_cliente, ultima_entrega" +
+                        " FROM View_ClienteRutas WHERE nombre_ruta = @Place AND id_cliente != @ThisClientID AND id_cliente not in (SELECT id_cliente FROM View_ClientesConPedido WHERE fechaEntrega_orden = @Date OR fechaEntrega_orden = CAST(GETDATE() AS DATE))";
+                }
+                else if (cp)
+                {
+                    sqlQuery = "SELECT id_cliente, nombre_cliente, apellido_cliente, colonia_cliente, nombre_ruta, id_ruta, postal_cliente, telefono_cliente, movil_cliente, plano_cliente, ultima_entrega" +
+                        " FROM View_ClienteRutas WHERE postal_cliente = @Place AND postal_cliente != '' AND id_cliente != @ThisClientID AND id_cliente not in (SELECT id_cliente FROM View_ClientesConPedido WHERE fechaEntrega_orden = @Date OR fechaEntrega_orden = CAST(GETDATE() AS DATE))";
                 }
 
                 using (var command = new SqlCommand(sqlQuery, connection))
                 {
                     // Loads the query results into the table
                     // Default colony parameter
-                    command.Parameters.AddWithValue("@Place", clientObj.Colonia);
-                    if (rute)
-                        command.Parameters.AddWithValue("@Place", clientObj.idRuta);
+                    if (colony)
+                        command.Parameters.AddWithValue("@Place", clientObj.Colonia);
+                    else if (rute)
+                        command.Parameters.AddWithValue("@Place", clientObj.Ruta);
+                    else if (cp)
+                        command.Parameters.AddWithValue("@Place", clientObj.Postal);
 
                     command.Parameters.AddWithValue("@ThisClientID", Convert.ToInt32(clientObj.Id));
                     command.Parameters.AddWithValue("@Date", dateTime);

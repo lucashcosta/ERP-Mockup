@@ -239,6 +239,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="css\bootstrap-flaty.css" />
     <Content Include="css\bootstrap-lumen.css" />
+    <Content Include="css\bootstrap-switch.css" />
     <Content Include="css\bootstrap-yeti.css" />
     <Content Include="css\daterangepicker.css" />
     <Content Include="css\FooTable\fonts\footable.svg" />
@@ -279,6 +280,7 @@
     <Content Include="Images\Login\pinlayer2.png" />
     <Content Include="Images\Sample\Invoice\evalogo.png" />
     <Content Include="Inventario.aspx" />
+    <Content Include="js\bootstrap-switch.js" />
     <Content Include="js\CoolScripts.js" />
     <Content Include="js\daterangepicker.js" />
     <Content Include="js\FooTable\footable.filter.js" />
@@ -440,13 +442,12 @@
     <Content Include="entypo\font\entypo.ttf" />
     <Content Include="entypo\font\entypo.woff" />
     <Content Include="Consultas.aspx" />
-    <None Include="Properties\PublishProfiles\IonDynDns.pubxml" />
-    <None Include="Properties\PublishProfiles\MyDeployProfile.pubxml" />
     <Content Include="Pedido.aspx" />
     <Content Include="Reportes\Template.aspx" />
     <Content Include="Reportes\CierreCaja.aspx" />
     <Content Include="Rutas.aspx" />
     <Content Include="Scheduler.aspx" />
+    <None Include="Properties\PublishProfiles\IonWater.pubxml" />
     <None Include="Scripts\jquery-2.2.0.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.0.js" />
     <Content Include="Scripts\jquery-2.2.0.min.js" />

@@ -19,6 +19,9 @@ namespace WebAdmin.Classes
         public string Ruta { get; set; }
         public string idRuta { get; set; }
         public string Postal { get; set; }
+        private DateTime LastOrderDate { get; set; }
+        public string LastOrder { get; set; }
+        public int DaysUntilLastOrder { get; set; }
 
         public Client(DataRow row)
         {
@@ -53,6 +56,14 @@ namespace WebAdmin.Classes
 
             try { Postal = row["postal_cliente"].ToString(); }
             catch (Exception e) { Postal = String.Empty; }
+
+            try
+            {
+                LastOrderDate = Convert.ToDateTime(row["ultima_entrega"].ToString());
+                LastOrder = String.Format("{0:d MMMM, yyyy}", LastOrderDate);
+                DaysUntilLastOrder = (DateTime.Now - LastOrderDate).Days;
+            }
+            catch (Exception e) { LastOrderDate = DateTime.Today; }
         }
 
         public Client(IDictionary<string, object> client)

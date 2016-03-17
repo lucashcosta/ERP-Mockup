@@ -2,6 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 
     <link href="/css/bootstrap-table.css" rel="stylesheet" type="text/css" />
+    <link href="/css/bootstrap-switch.css" rel="stylesheet" type="text/css" />
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="FeaturedContent" runat="server">
@@ -31,6 +32,24 @@
                 </ol>
             </div>
         </div><!-- /.row Titulo de aspx -->
+
+        <div class="progress">
+          <div id="progressBar" class="progress-bar progress-bar-striped active" role="progressbar"
+          aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+
+          </div>
+        </div>
+
+        <div class="radio">
+            <label><input id="optCol" type="radio" name="optradio" checked>Colonia</label>
+        </div>
+        <div class="radio">
+            <label><input id="optRut" type="radio" name="optradio">Ruta</label>
+        </div>
+        <div class="radio">
+            <label><input id="optCp" type="radio" name="optradio">Codigo postal</label>
+        </div>
+
         <div id="resultClients">
 
         </div>
@@ -38,7 +57,11 @@
 
     <!-- Table -->
     <script src="/js/bootstrap-table.js" type="text/javascript"></script>
+    <script src="/js/bootstrap-switch.js" type="text/javascript"></script>
     <script type="text/javascript">
+        // Bootstrap switch
+        $("[name='my-checkbox']").bootstrapSwitch();
+
         var startDate;
         var endDate;
 
@@ -114,6 +137,8 @@
         GetOrderClients(startDate);
 
         function GetOrderClients(date) {
+            setProgressBar(5)
+            disableRadios();
             if (localStorage.getItem('l_startDate')) {
                 startDate = localStorage.getItem('l_startDate');
                 var sD = moment(startDate);
@@ -140,8 +165,16 @@
             });
         }
 
+        var clientRelationsCounter = 0;
         function OnSuccessGetOrderClients(response) {
             var clientRelations = JSON.parse(response.d);
+            clientRelationsCounter = clientRelations.length;
+
+            // If no elements
+            if (clientRelationsCounter == 0) {
+                enableRadios();
+                return;
+            }
             clientRelations.forEach(function (client) {
                 getCloseClients(client, startDate);
             });
@@ -149,8 +182,10 @@
             //$("#moneyBox").text("$" + boxItems.Total);
         }
 
-        var colony = true;
-        var rute = false;
+        var isCol = true;
+        var isRut = false;
+        var isCp = false;
+        var registryCounter = 0;
         function getCloseClients(client, date) {
             if (localStorage.getItem('l_startDate')) {
                 startDate = localStorage.getItem('l_startDate');
@@ -164,40 +199,83 @@
             $.ajax({
                 type: "POST",
                 url: "ConsultaClientesPosibles.aspx/GetCloseClients",
-                data: "{client:" + JSON.stringify(client) + ", colony:" + colony + ", rute:" + rute + ", date:'" + date + "'}",
+                data: "{client:" + JSON.stringify(client) + ", colony:" + isCol + ", rute:" + isRut + ", cp:" + isCp + ", date:'" + date + "'}",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 traditional: true,
                 success: OnSuccessGetCloseClients,
-                failure: function (response) {
-                    alert("Fail: " + response.d);
-                },
-                error: function (response) {
-                    alert("Error: " + response.d);
-                }
             });
         }
 
         // Store colonies/rutes to detect when repeated
         var registryClientPlaces = new Array();
         function OnSuccessGetCloseClients(response) {
+            registryCounter++;
+
+            setProgressBar((registryCounter / clientRelationsCounter) * 100);
+
+            if (registryCounter == clientRelationsCounter) {
+                enableRadios();
+            }
+
             // IMPORTANT!!
             // The last item is the client who everyone is relating to
             var possibleClients = JSON.parse(response.d);
-            if ((possibleClients.length - 1) == 0)
-                return;
+            if ((possibleClients.length - 1) == 0) {
 
-            if (arrayContains(possibleClients[0].Colonia.toLowerCase(), registryClientPlaces)) {
-                // Some other client already used this colony
-                var indexOfClient = registryClientPlaces.indexOf(possibleClients[0].Colonia.toLowerCase());
-                pushClientWithCommonPlace(indexOfClient, possibleClients[(possibleClients.length - 1)]);
+                //console.log("Zero: " + registryCounter + " - " + clientRelationsCounter)
+
+                // finished getting elements
+                if (registryCounter == clientRelationsCounter) {
+                    enableRadios();
+                }
+
                 return;
             }
-            else {
-                registryClientPlaces.push(possibleClients[0].Colonia.toLowerCase());
+
+            if (isCol) {
+                if (arrayContains(possibleClients[0].Colonia.toLowerCase(), registryClientPlaces)) {
+                    // Some other client already used this colony
+                    var indexOfClient = registryClientPlaces.indexOf(possibleClients[0].Colonia.toLowerCase());
+                    pushClientWithCommonPlace(indexOfClient, possibleClients[(possibleClients.length - 1)]);
+                    return;
+                }
+                else {
+                    registryClientPlaces.push(possibleClients[0].Colonia.toLowerCase());
+                }
+            }
+
+            if (isRut) {
+                if (arrayContains(possibleClients[0].Ruta.toLowerCase(), registryClientPlaces)) {
+                    // Some other client already used this colony
+                    var indexOfClient = registryClientPlaces.indexOf(possibleClients[0].Ruta.toLowerCase());
+                    pushClientWithCommonPlace(indexOfClient, possibleClients[(possibleClients.length - 1)]);
+                    return;
+                }
+                else {
+                    registryClientPlaces.push(possibleClients[0].Ruta.toLowerCase());
+                }
+            }
+
+            if (isCp) {
+                if (arrayContains(possibleClients[0].Postal.toLowerCase(), registryClientPlaces)) {
+                    // Some other client already used this colony
+                    var indexOfClient = registryClientPlaces.indexOf(possibleClients[0].Postal.toLowerCase());
+                    pushClientWithCommonPlace(indexOfClient, possibleClients[(possibleClients.length - 1)]);
+                    return;
+                }
+                else {
+                    registryClientPlaces.push(possibleClients[0].Postal.toLowerCase());
+                }
             }
 
             generateTable(possibleClients);
+
+            // finished getting elements
+            //console.log(registryCounter + " - " + clientRelationsCounter)
+            if (registryCounter == clientRelationsCounter) {
+                enableRadios();
+            }
         }
 
         function arrayContains(needle, arrhaystack) {
@@ -225,6 +303,7 @@
             html += "<th>Nombre</th>";
             html += "<th>Colonia</th>";
             html += "<th>Ruta</th>";
+            html += "<th>Dias sin comprar</th>";
             html += "<th>Telefono</th>";
             html += "<th>Movil</th>";
             html += "<th>Postal</th>";
@@ -236,10 +315,11 @@
                 html += "<tr>";
                 html += "<td> <a href='/EditarCliente.aspx?Id=" + data[i].Id + "'><i class='fa fa-user icon-green'></i> " + prettyString(data[i].FullName) + "</a></td>";
                 html += "<td><strong>" + prettyString(data[i].Colonia) + "</strong></td>";
-                html += "<td>" + prettyString(data[i].Ruta) + "</td>";
+                html += "<td><strong>" + prettyString(data[i].Ruta) + "</strong></td>";
+                html += "<td>" + data[i].DaysUntilLastOrder + "</td>";
                 html += "<td>" + data[i].Phone + "</td>";
                 html += "<td>" + data[i].Mobile + "</td>";
-                html += "<td>" + data[i].Postal + "</td>";
+                html += "<td><strong>" + data[i].Postal + "</strong></td>";
                 html += "</tr>";
             }
 
@@ -253,12 +333,73 @@
             $("#resultClients").append(html);
         }
 
-        function prettyString(str) {
-            str = str.toLowerCase().replace(/\b[a-z]/g, function (letter) {
-                return letter.toUpperCase();
-            });
+        $("input[name=optradio]:radio").change(function () {
+            // Reset everything
+            registryCounter = 0;
+            clientRelationsCounter = 0;
+            registryClientPlaces.splice(0, registryClientPlaces.length)
 
-            return str;
+            if ($("#optCol").is(":checked")) {
+                isCol = true;
+                isRut = false;
+                isCp = false;
+
+                $("#resultClients").empty();
+                GetOrderClients(startDate);
+            }
+            if ($("#optRut").is(":checked")) {
+                isCol = false;
+                isRut = true;
+                isCp = false;
+
+                $("#resultClients").empty();
+                GetOrderClients(startDate);
+            }
+            if ($("#optCp").is(":checked")) {
+                isCol = false;
+                isRut = false;
+                isCp = true;
+
+                $("#resultClients").empty();
+                GetOrderClients(startDate);
+            }
+        });
+
+        function disableRadios() {
+            // Disable datepicker too
+            $("#dashboard-report-range").addClass('disabled');
+
+            $("#optCp").attr('disabled', 'disabled');
+            $("#optRut").attr('disabled', 'disabled');
+            $("#optCol").attr('disabled', 'disabled');
+        }
+
+        function enableRadios() {
+            setProgressBar(100);
+            registryCounter = 0;
+            clientRelationsCounter = 0;
+            registryClientPlaces.splice(0, registryClientPlaces.length)
+
+            $("#dashboard-report-range").removeClass('disabled');
+
+            $("#optCp").attr('disabled', false);
+            $("#optRut").attr('disabled', false);
+            $("#optCol").attr('disabled', false);
+        }
+
+        function setProgressBar(progress) {
+            if (progress == 100) {
+                $('#progressBar').css('width', progress + '%').attr('aria-valuenow', progress).removeClass('active').addClass('progress-bar-success');
+            }
+            else {
+                $('#progressBar').css('width', progress + '%').attr('aria-valuenow', progress).addClass('active').removeClass('progress-bar-success');
+            }
+        }
+
+        function prettyString(str) {
+            return str.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
         }
 
         $(document).on('click', '.panel-heading span.clickable', function (e) {

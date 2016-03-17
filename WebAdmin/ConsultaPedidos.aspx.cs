@@ -48,7 +48,7 @@ namespace WebAdmin
             //dummy.Columns.Add("apellido_cliente");
             dummy.Columns.Add("movil_cliente");
             dummy.Columns.Add("telefono_cliente");
-            dummy.Columns.Add("plano_cliente");
+            dummy.Columns.Add("nombre_ruta");
             dummy.Columns.Add("fechaEntrega_orden");
             dummy.Columns.Add("direccion");
             dummy.Columns.Add("postal_cliente");
